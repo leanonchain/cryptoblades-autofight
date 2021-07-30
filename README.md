@@ -32,3 +32,6 @@ You can add many accounts as you want.
 ```
 node cryptoBladesAutoFight.js
 ```
+---
+> All the CryptoBlades contract runs behind proxys, so they can change the functions at any time. Breaking the bot.
+> Please report any change or issue.
