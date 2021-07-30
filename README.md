@@ -13,7 +13,8 @@ git clone https://github.com/BatCoderDefi/cryptoblades-autofight.git
 ```
 npm install
 ```
-#### Configure your user file: You will need a file `userSettings.json` with the next structure:
+#### Configure your user file
+You will need a file `userSettings.json` with the next structure:
 ```
 {
     "accounts": [
