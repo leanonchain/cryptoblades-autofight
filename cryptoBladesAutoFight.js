@@ -89,7 +89,7 @@ async function claimXpRewards(account, privateKey){
                 console.log(err)
             }
             console.log(txHash)
-        }).once()
+        }).once('receipt', async(receipt) => {})
     })
 }
 
@@ -298,6 +298,7 @@ async function main(){
             console.log("Claimed exp")
             await claimXpRewards(account, privateKey)
             claimExp = false
+            await delay(10000)
         }
     }
     console.log("Wins: ", totalWins)
