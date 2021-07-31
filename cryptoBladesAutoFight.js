@@ -39,7 +39,7 @@ const characterContract = new web3.eth.Contract(
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const experienceTable = [
+const EXPERIENCE_TABLE = [
     16, 17, 18, 19, 20, 22, 24, 26, 28, 30,
     33, 36, 39, 42, 46, 50, 55, 60, 66, 72,
     79, 86, 94, 103, 113, 124, 136, 149, 163, 178, 
@@ -68,6 +68,26 @@ const experienceTable = [
 let totalWins = 0
 let totalLosses = 0
 let skillGained = 0
+
+async function checkExperienceToClaim(claimExp, character){
+    if(claimExp){
+        return true
+    }else if(CLAIM_EXP){
+        let heroLevel = await characterContract.methods.getLevel(character).call();
+        let nextChangeLevel = parseInt(heroLevel / 10) * 10 + 11
+        let expRequired = 0
+        for(let level = heroLevel; level < nextChangeLevel - 1; level++){
+            expRequired += EXPERIENCE_TABLE[level]
+        }
+        let heroXp = await characterContract.methods.getXp(character).call();
+        expRequired -= heroXp
+        let xpRewards = await gameContract.methods.getXpRewards(character).call();
+        if(xpRewards >= expRequired){
+            return true
+        }
+    }
+    return false
+}
 
 async function claimXpRewards(account, privateKey){
     var dataClaimExp = gameContract.methods.claimXpRewards().encodeABI()
@@ -225,7 +245,7 @@ async function main(){
     const FULL_STAMINA = await characterContract.methods.maxStamina().call()
     const SECONDS_PER_STAMINA = await characterContract.methods.secondsPerStamina().call()
     let account, privateKey, characters, weapons
-    let claimExp = false;
+    let claimExp = false
     for(let j = 0; j < accounts.length; j++){
         account = accounts[j]
         privateKey = Buffer.from(privateKeys[j], 'hex')
@@ -299,20 +319,7 @@ async function main(){
                 maxStamina = stamina
             }
 
-            if(!claimExp && CLAIM_EXP){
-                let heroLevel = await characterContract.methods.getLevel(character).call();
-                let nextChangeLevel = parseInt(heroLevel / 10) * 10 + 11
-                let expRequired = 0
-                for(let level = heroLevel; level < nextChangeLevel - 1; level++){
-                    expRequired += experienceTable[level]
-                }
-                let heroXp = await characterContract.methods.getXp(character).call();
-                expRequired -= heroXp
-                let xpRewards = await gameContract.methods.getXpRewards(character).call();
-                if(xpRewards >= expRequired){
-                    claimExp = true
-                }
-            }
+            claimExp = await checkExperienceToClaim(claimExp, character)
         }
         if(claimExp){
             console.log("Claimed exp")
@@ -324,7 +331,6 @@ async function main(){
     console.log("Wins: ", totalWins)
     console.log("Losses: ", totalLosses)
     console.log("Skill earned: ", skillGained.toFixed(4))
-
 
     let nextFullStaminaInHours = parseInt((FULL_STAMINA - maxStamina) * 5 / 60)
     console.log("Next full stamina in ", nextFullStaminaInHours, " hours.")
