@@ -220,9 +220,10 @@ async function selectEnemy(character, weapon){
 
 async function main(){
     let maxStamina = 0
-    const staminaCostFight = 40
-    const tempStaminaCostFight = OPTIMIZE_STAMINA ? 160 : staminaCostFight
-    const fullStamina = 200
+    const BASE_STAMINA_COST_PER_FIGHT = 40
+    const MIN_STAMINA_COST_PER_FIGHT = OPTIMIZE_STAMINA ? 160 : BASE_STAMINA_COST_PER_FIGHT
+    const FULL_STAMINA = await characterContract.methods.maxStamina().call()
+    const SECONDS_PER_STAMINA = await characterContract.methods.secondsPerStamina().call()
     let account, privateKey, characters, weapons
     let claimExp = false;
     for(let j = 0; j < accounts.length; j++){
@@ -238,7 +239,7 @@ async function main(){
             console.log("Character ", i)
             let stamina = await characterContract.methods.getStaminaPoints(character).call()
 
-            while(stamina >= tempStaminaCostFight){
+            while(stamina >= MIN_STAMINA_COST_PER_FIGHT){
                 let weaponSelected
                 let targetSelected
                 let enemyPowerSelected
@@ -265,8 +266,16 @@ async function main(){
                     (finalWinChance < MIN_CHANCE && !OPTIMIZE_STAMINA) ||
                     (finalWinChance < PREFERRED_CHANCE && OPTIMIZE_STAMINA)
                 ){
-                    console.log("Win chance too low with any weapon. Omitted character")
-                    break
+                    let currentDate = new Date();
+                    let secondsToFullStamina = (FULL_STAMINA - stamina) * SECONDS_PER_STAMINA
+                    let characterFullStaminaDate = new Date(currentDate.getTime() + secondsToFullStamina * 1000);
+                    if(currentDate.getHours() == characterFullStaminaDate.getHours() &&
+                        currentDate.getDate() == characterFullStaminaDate.getDate()){
+                        console.log("Win chance too low but fighting because the character will fill his stamina in this same hour.")
+                    }else{
+                        console.log("Win chance too low with any weapon. Omitted character")
+                        break
+                    }
                 }
                 
                 let staminaMultiplier = 1
@@ -274,7 +283,7 @@ async function main(){
                 // This if becomes redundant if OPTIMIZE_STAMINA is true, but allows
                 // compatibility in the case OPTIMIZE_STAMINA is false
                 if(finalWinChance >= PREFERRED_CHANCE){
-                    staminaMultiplier = parseInt(stamina / staminaCostFight)
+                    staminaMultiplier = parseInt(stamina / BASE_STAMINA_COST_PER_FIGHT)
                     console.log("Win chance ", finalWinChance.toFixed(2),"%. Fighting with", staminaMultiplier.toString() + "x", "stamina");
                 }else{
                     console.log("Win chance ", finalWinChance.toFixed(2),"%")
@@ -284,7 +293,7 @@ async function main(){
                 await delay(30000)
                 
                 // Subtract stamina manually instead of adding requests
-                stamina -= staminaCostFight * staminaMultiplier
+                stamina -= BASE_STAMINA_COST_PER_FIGHT * staminaMultiplier
             }
             if(stamina > maxStamina){
                 maxStamina = stamina
@@ -317,9 +326,9 @@ async function main(){
     console.log("Skill earned: ", skillGained.toFixed(4))
 
 
-    let nextFullStaminaInHours = parseInt((fullStamina - maxStamina) * 5 / 60)
+    let nextFullStaminaInHours = parseInt((FULL_STAMINA - maxStamina) * 5 / 60)
     console.log("Next full stamina in ", nextFullStaminaInHours, " hours.")
-    let nextFullStaminaInSeconds = (fullStamina - maxStamina) * 5 * 60
+    let nextFullStaminaInSeconds = (FULL_STAMINA - maxStamina) * 5 * 60
     let currentDate = new Date()
     currentDate.setSeconds(currentDate.getSeconds() + nextFullStaminaInSeconds)
     var datetime = currentDate.getDate() + "/"
