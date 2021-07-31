@@ -8,8 +8,8 @@ If the probability is >= 92% fights and if it's >= 98% fight with all the stamin
 If this is true, the bot claims the experience.
 
 `31/07/21 update:` Added `options.json` file. In this file you can personalize your chance values to fight, set `CLAIM_EXP: false` if you don't want the bot to claim the experience, and choose between two ways to play:
-1. `OPTIMIZE_STAMINA = false`. With this option the bot will play like before. Fighting if the win chance is equal or greater than `MIN_CHANCE` and using all stamina in a single fight if the win chance is equal or greater than `PREFERRED_CHANCE`.
-2. `OPTIMIZE_STAMINA = false`. The bot will ignore the `MIN_CHANCE` value and fight using all the stamina if the win chane is equal or greater than `PREFERRED_CHANCE`.
+1. `OPTIMIZE_STAMINA: false`. With this option the bot will play like before. Fighting if the win chance is equal or greater than `MIN_CHANCE` and using all stamina in a single fight if the win chance is equal or greater than `PREFERRED_CHANCE`.
+2. `OPTIMIZE_STAMINA: true`. The bot will ignore the `MIN_CHANCE` value and fight using all the stamina if the win chane is equal or greater than `PREFERRED_CHANCE`.
 
 ## How to use it
 #### Clone this repo
