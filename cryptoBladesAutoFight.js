@@ -12,7 +12,11 @@ const Tx = require('ethereumjs-tx')
 
 const userSettings = require('./userSettings.json')
 
+const options = require('./options.json')
+
 const { accounts, privateKeys } = userSettings
+
+const { OPTIMIZE_STAMINA, MIN_CHANCE, PREFERRED_CHANCE, CLAIM_EXP  } = options
 
 const gameAddress = '0x39Bea96e13453Ed52A734B6ACEeD4c41F57B2271'
 const weaponAddress = '0x7e091b0a220356b157131c831258a9c98ac8031a'
@@ -217,6 +221,7 @@ async function selectEnemy(character, weapon){
 async function main(){
     let maxStamina = 0
     const staminaCostFight = 40
+    const tempStaminaCostFight = OPTIMIZE_STAMINA ? 160 : staminaCostFight
     const fullStamina = 200
     let account, privateKey, characters, weapons
     let claimExp = false;
@@ -233,7 +238,7 @@ async function main(){
             console.log("Character ", i)
             let stamina = await characterContract.methods.getStaminaPoints(character).call()
 
-            while(stamina >= staminaCostFight){
+            while(stamina >= tempStaminaCostFight){
                 let weaponSelected
                 let targetSelected
                 let enemyPowerSelected
@@ -256,14 +261,19 @@ async function main(){
                 }
                 console.log("Selected enemy with power ", enemyPowerSelected, " using weapon id ", weaponSelected)
 
-                if(finalWinChance < 92){
+                if(
+                    (finalWinChance < MIN_CHANCE && !OPTIMIZE_STAMINA) ||
+                    (finalWinChance < PREFERRED_CHANCE && OPTIMIZE_STAMINA)
+                ){
                     console.log("Win chance too low with any weapon. Omitted character")
                     break
                 }
                 
                 let staminaMultiplier = 1
                 
-                if(finalWinChance >= 98){
+                // This if becomes redundant if OPTIMIZE_STAMINA is true, but allows
+                // compatibility in the case OPTIMIZE_STAMINA is false
+                if(finalWinChance >= PREFERRED_CHANCE){
                     staminaMultiplier = parseInt(stamina / staminaCostFight)
                     console.log("Win chance ", finalWinChance.toFixed(2),"%. Fighting with", staminaMultiplier.toString() + "x", "stamina");
                 }else{
@@ -273,13 +283,14 @@ async function main(){
                 await fight(character, weaponSelected, targetSelected, account, privateKey, staminaMultiplier)
                 await delay(30000)
                 
-                stamina = await characterContract.methods.getStaminaPoints(character).call()
+                // Subtract stamina manually instead of adding requests
+                stamina -= staminaCostFight * staminaMultiplier
             }
             if(stamina > maxStamina){
                 maxStamina = stamina
             }
 
-            if(!claimExp){
+            if(!claimExp && CLAIM_EXP){
                 let heroLevel = await characterContract.methods.getLevel(character).call();
                 let nextChangeLevel = parseInt(heroLevel / 10) * 10 + 11
                 let expRequired = 0
@@ -303,7 +314,7 @@ async function main(){
     }
     console.log("Wins: ", totalWins)
     console.log("Losses: ", totalLosses)
-    console.log("Skill gained: ", skillGained.toFixed(4))
+    console.log("Skill earned: ", skillGained.toFixed(4))
 
 
     let nextFullStaminaInHours = parseInt((fullStamina - maxStamina) * 5 / 60)
