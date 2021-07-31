@@ -40,6 +40,7 @@ You can add many accounts as you want.
 node cryptoBladesAutoFight.js
 ```
 At the end of the execution the bot will show you how many battles you won, how many you lost, the SKILL won and the date and in how many hours you will have a character with stamina at 200.
+
 ---
 > All the CryptoBlades contract runs behind proxys, so they can change the functions at any time. Breaking the bot.
 > Please report any change or issue.
