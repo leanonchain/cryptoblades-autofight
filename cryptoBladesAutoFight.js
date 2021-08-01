@@ -44,30 +44,33 @@ const EXPERIENCE_TABLE = [
     33, 36, 39, 42, 46, 50, 55, 60, 66, 72,
     79, 86, 94, 103, 113, 124, 136, 149, 163, 178, 
     194, 211, 229, 248, 268, 289, 311, 334, 358, 383, 
-    409, 436, 464, 493, 523, 554, 586, 619, 653, 688
-    , 724, 761, 799, 838, 878, 919, 961, 1004, 1048, 1093, 1139, 1186, 1234, 1283
-    , 1333, 1384, 1436, 1489, 1543, 1598, 1654, 1711, 1769, 1828, 1888, 1949, 2011
-    , 2074, 2138, 2203, 2269, 2336, 2404, 2473, 2543, 2614, 2686, 2759, 2833, 2908
-    , 2984, 3061, 3139, 3218, 3298, 3379, 3461, 3544, 3628, 3713, 3799, 3886, 3974
-    , 4063, 4153, 4244, 4336, 4429, 4523, 4618, 4714, 4811, 4909, 5008, 5108, 5209
-    , 5311, 5414, 5518, 5623, 5729, 5836, 5944, 6053, 6163, 6274, 6386, 6499, 6613
-    , 6728, 6844, 6961, 7079, 7198, 7318, 7439, 7561, 7684, 7808, 7933, 8059, 8186
-    , 8314, 8443, 8573, 8704, 8836, 8969, 9103, 9238, 9374, 9511, 9649, 9788, 9928
-    , 10069, 10211, 10354, 10498, 10643, 10789, 10936, 11084, 11233, 11383, 11534
-    , 11686, 11839, 11993, 12148, 12304, 12461, 12619, 12778, 12938, 13099, 13261
-    , 13424, 13588, 13753, 13919, 14086, 14254, 14423, 14593, 14764, 14936, 15109
-    , 15283, 15458, 15634, 15811, 15989, 16168, 16348, 16529, 16711, 16894, 17078
-    , 17263, 17449, 17636, 17824, 18013, 18203, 18394, 18586, 18779, 18973, 19168
-    , 19364, 19561, 19759, 19958, 20158, 20359, 20561, 20764, 20968, 21173, 21379
-    , 21586, 21794, 22003, 22213, 22424, 22636, 22849, 23063, 23278, 23494, 23711
-    , 23929, 24148, 24368, 24589, 24811, 25034, 25258, 25483, 25709, 25936, 26164
-    , 26393, 26623, 26854, 27086, 27319, 27553, 27788, 28024, 28261, 28499, 28738
-    , 28978
+    409, 436, 464, 493, 523, 554, 586, 619, 653, 688, 
+    724, 761, 799, 838, 878, 919, 961, 1004, 1048, 1093, 
+    1139, 1186, 1234, 1283, 1333, 1384, 1436, 1489, 1543, 1598, 
+    1654, 1711, 1769, 1828, 1888, 1949, 2011, 2074, 2138, 2203, 
+    2269, 2336, 2404, 2473, 2543, 2614, 2686, 2759, 2833, 2908, 
+    2984, 3061, 3139, 3218, 3298, 3379, 3461, 3544, 3628, 3713, 
+    3799, 3886, 3974, 4063, 4153, 4244, 4336, 4429, 4523, 4618, 
+    4714, 4811, 4909, 5008, 5108, 5209, 5311, 5414, 5518, 5623, 
+    5729, 5836, 5944, 6053, 6163, 6274, 6386, 6499, 6613, 6728, 
+    6844, 6961, 7079, 7198, 7318, 7439, 7561, 7684, 7808, 7933, 
+    8059, 8186, 8314, 8443, 8573, 8704, 8836, 8969, 9103, 9238, 
+    9374, 9511, 9649, 9788, 9928, 10069, 10211, 10354, 10498, 10643, 
+    10789, 10936, 11084, 11233, 11383, 11534, 11686, 11839, 11993, 12148, 
+    12304, 12461, 12619, 12778, 12938, 13099, 13261, 13424, 13588, 13753, 
+    13919, 14086, 14254, 14423, 14593, 14764, 14936, 15109, 15283, 15458, 
+    15634, 15811, 15989, 16168, 16348, 16529, 16711, 16894, 17078, 17263, 
+    17449, 17636, 17824, 18013, 18203, 18394, 18586, 18779, 18973, 19168, 
+    19364, 19561, 19759, 19958, 20158, 20359, 20561, 20764, 20968, 21173, 
+    21379, 21586, 21794, 22003, 22213, 22424, 22636, 22849, 23063, 23278, 
+    23494, 23711, 23929, 24148, 24368, 24589, 24811, 25034, 25258, 25483, 
+    25709, 25936, 26164, 26393, 26623, 26854, 27086, 27319, 27553, 27788, 
+    28024, 28261, 28499, 28738, 28978
 ];
 
 let totalWins = 0
 let totalLosses = 0
-let skillGained = 0
+let skillEarned = 0
 
 async function checkExperienceToClaim(claimExp, character){
     if(claimExp){
@@ -89,36 +92,40 @@ async function checkExperienceToClaim(claimExp, character){
     return false
 }
 
-async function claimXpRewards(account, privateKey){
-    var dataClaimExp = gameContract.methods.claimXpRewards().encodeABI()
+async function claimXpRewards(account, privateKey, claimExp){
+    if(claimExp){
+        let dataClaimExp = gameContract.methods.claimXpRewards().encodeABI()
 
-    await web3.eth.getTransactionCount(account, async(err, txCount) => {
-        const txObject = {
-            nonce:    web3.utils.toHex(txCount),
-            from:     account,
-            to:       gameAddress,
-            data:     dataClaimExp,
-            value:    web3.utils.toHex(web3.utils.toWei('0', 'ether')),
-            gasLimit: web3.utils.toHex(6000000),
-            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei'))
-        }
-    
-        const tx = new Tx(txObject)
-        tx.sign(privateKey)
-        const serializedTx = tx.serialize()
-        const raw = '0x' + serializedTx.toString('hex')
-
-        await web3.eth.sendSignedTransaction(raw,(err, txHash)=>{
-            if(err != null){
-                console.log(err)
+        await web3.eth.getTransactionCount(account, async(err, txCount) => {
+            const txObject = {
+                nonce:    web3.utils.toHex(txCount),
+                from:     account,
+                to:       gameAddress,
+                data:     dataClaimExp,
+                value:    web3.utils.toHex(web3.utils.toWei('0', 'ether')),
+                gasLimit: web3.utils.toHex(6000000),
+                gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei'))
             }
-            console.log(txHash)
-        }).once('receipt', async(receipt) => {})
-    })
+        
+            const tx = new Tx(txObject)
+            tx.sign(privateKey)
+            const serializedTx = tx.serialize()
+            const raw = '0x' + serializedTx.toString('hex')
+    
+            await web3.eth.sendSignedTransaction(raw,(err, txHash)=>{
+                if(err != null){
+                    console.log(err)
+                }
+                console.log("Exp claimed. Tx: ", txHash)
+            }).once('receipt', async(receipt) => {})
+        })
+        await delay(10000)
+    }
+    return false
 }
 
 async function fight(character, weapon, target, account, privateKey, staminaMultiplier){   
-    var dataFight = gameContract.methods.fight(character, weapon, target, staminaMultiplier).encodeABI()
+    let dataFight = gameContract.methods.fight(character, weapon, target, staminaMultiplier).encodeABI()
 
     await web3.eth.getTransactionCount(account, async(err, txCount) => {
         const txObject = {
@@ -163,12 +170,13 @@ async function fight(character, weapon, target, account, privateKey, staminaMult
 
             if(result.skillGain > 0){
                 totalWins++
-                skillGained += (result.skillGain / 1e18)
+                skillEarned += (result.skillGain / 1e18)
             }else{
                 totalLosses++
             }
         })
     })
+    await delay(30000)
 }
 
 function calculateWinChances(heroPower, enemyPower){
@@ -238,14 +246,51 @@ async function selectEnemy(character, weapon){
     }
 }
 
+function printStats(totalWins, totalLosses, skillEarned, maxStamina, minStamina, FULL_STAMINA, SECONDS_PER_STAMINA){
+    console.log("Wins: ", totalWins)
+    console.log("Losses: ", totalLosses)
+    console.log("Skill earned: ", skillEarned.toFixed(4))
+    let nextFullStaminaInHours = parseInt((FULL_STAMINA - maxStamina) * SECONDS_PER_STAMINA / 60 / 60)
+    console.log("Next full stamina in ", nextFullStaminaInHours, " hours.")
+    let nextFullStaminaInSeconds = (FULL_STAMINA - maxStamina) * SECONDS_PER_STAMINA
+    let currentDate = new Date()
+    currentDate.setSeconds(currentDate.getSeconds() + nextFullStaminaInSeconds)
+    let fullStaminaDate = currentDate.getDate() + "/"
+                + (currentDate.getMonth()+1)  + "/" 
+                + currentDate.getFullYear() + " @ "  
+                + currentDate.getHours() + ":"  
+                + currentDate.getMinutes() + ":" 
+                + (currentDate.getSeconds());
+    console.log(fullStaminaDate)
+    if(OPTIMIZE_STAMINA){
+        let nextMinStaminaInHours = parseInt((FULL_STAMINA - minStamina) * SECONDS_PER_STAMINA / 60 / 60)
+        console.log("You will have all your character with at least 160 stamina in ",nextMinStaminaInHours, " hours.")
+        let nextMinStaminaInSeconds = (FULL_STAMINA - minStamina) * SECONDS_PER_STAMINA
+        currentDate = new Date()
+        currentDate.setSeconds(currentDate.getSeconds() + nextMinStaminaInSeconds)
+        let minStaminaDate = currentDate.getDate() + "/"
+                    + (currentDate.getMonth()+1)  + "/" 
+                    + currentDate.getFullYear() + " @ "  
+                    + currentDate.getHours() + ":"  
+                    + currentDate.getMinutes() + ":" 
+                    + (currentDate.getSeconds());
+        console.log(minStaminaDate)
+    }
+}
+
 async function main(){
-    let maxStamina = 0
     const BASE_STAMINA_COST_PER_FIGHT = 40
-    const MIN_STAMINA_COST_PER_FIGHT = OPTIMIZE_STAMINA ? 160 : BASE_STAMINA_COST_PER_FIGHT
     const FULL_STAMINA = await characterContract.methods.maxStamina().call()
+    const MIN_STAMINA_COST_PER_FIGHT = OPTIMIZE_STAMINA ? 
+        FULL_STAMINA - BASE_STAMINA_COST_PER_FIGHT : 
+        BASE_STAMINA_COST_PER_FIGHT
     const SECONDS_PER_STAMINA = await characterContract.methods.secondsPerStamina().call()
+    let minStamina = FULL_STAMINA
+    let maxStamina = 0
+
     let account, privateKey, characters, weapons
     let claimExp = false
+
     for(let j = 0; j < accounts.length; j++){
         account = accounts[j]
         privateKey = Buffer.from(privateKeys[j], 'hex')
@@ -268,16 +313,16 @@ async function main(){
                 for(let x = 0; x < weapons.length ; x++){
                     let weapon = weapons[x]                
                     let fightSelected = await selectEnemy(character, weapon)
-                    let enemyPower = fightSelected.enemyPower,
-                        playerPower = fightSelected.finalPlayerPower,
-                        target = fightSelected.targetSelected;
-                    let winChance = calculateWinChances(playerPower, enemyPower)
+                    let winChance = calculateWinChances(
+                        fightSelected.finalPlayerPower, 
+                        fightSelected.enemyPower
+                    )
                     
                     if(winChance > finalWinChance){
                         weaponSelected = weapon
-                        targetSelected = target
+                        targetSelected = fightSelected.targetSelected
                         finalWinChance = winChance
-                        enemyPowerSelected = enemyPower
+                        enemyPowerSelected = fightSelected.enemyPower
                     }
                 }
                 console.log("Selected enemy with power ", enemyPowerSelected, " using weapon id ", weaponSelected)
@@ -310,7 +355,6 @@ async function main(){
                 }
 
                 await fight(character, weaponSelected, targetSelected, account, privateKey, staminaMultiplier)
-                await delay(30000)
                 
                 // Subtract stamina manually instead of adding requests
                 stamina -= BASE_STAMINA_COST_PER_FIGHT * staminaMultiplier
@@ -318,31 +362,14 @@ async function main(){
             if(stamina > maxStamina){
                 maxStamina = stamina
             }
-
+            if(stamina < minStamina){
+                minStamina = stamina
+            }
             claimExp = await checkExperienceToClaim(claimExp, character)
         }
-        if(claimExp){
-            console.log("Claimed exp")
-            await claimXpRewards(account, privateKey)
-            claimExp = false
-            await delay(10000)
-        }
+        claimExp = await claimXpRewards(account, privateKey, claimExp)
     }
-    console.log("Wins: ", totalWins)
-    console.log("Losses: ", totalLosses)
-    console.log("Skill earned: ", skillGained.toFixed(4))
-    let nextFullStaminaInHours = parseInt((FULL_STAMINA - maxStamina) * 5 / 60)
-    console.log("Next full stamina in ", nextFullStaminaInHours, " hours.")
-    let nextFullStaminaInSeconds = (FULL_STAMINA - maxStamina) * 5 * 60
-    let currentDate = new Date()
-    currentDate.setSeconds(currentDate.getSeconds() + nextFullStaminaInSeconds)
-    var datetime = currentDate.getDate() + "/"
-                + (currentDate.getMonth()+1)  + "/" 
-                + currentDate.getFullYear() + " @ "  
-                + currentDate.getHours() + ":"  
-                + currentDate.getMinutes() + ":" 
-                + (currentDate.getSeconds());
-    console.log(datetime)
+    printStats(totalWins, totalLosses, skillEarned, maxStamina, minStamina, FULL_STAMINA, SECONDS_PER_STAMINA)
 }
 
 main()
