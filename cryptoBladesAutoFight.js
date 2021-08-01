@@ -119,7 +119,6 @@ async function claimXpRewards(account, privateKey, claimExp){
                 console.log("Exp claimed. Tx: ", txHash)
             }).once('receipt', async(receipt) => {})
         })
-        await delay(10000)
     }
     return false
 }
@@ -127,7 +126,7 @@ async function claimXpRewards(account, privateKey, claimExp){
 async function fight(character, weapon, target, account, privateKey, staminaMultiplier){   
     let dataFight = gameContract.methods.fight(character, weapon, target, staminaMultiplier).encodeABI()
 
-    await web3.eth.getTransactionCount(account, async(err, txCount) => {
+    web3.eth.getTransactionCount(account, async(err, txCount) => {
         const txObject = {
             nonce:    web3.utils.toHex(txCount),
             from:     account,
@@ -176,7 +175,6 @@ async function fight(character, weapon, target, account, privateKey, staminaMult
             }
         })
     })
-    await delay(30000)
 }
 
 function calculateWinChances(heroPower, enemyPower){
@@ -355,6 +353,7 @@ async function main(){
                 }
 
                 await fight(character, weaponSelected, targetSelected, account, privateKey, staminaMultiplier)
+                await delay(30000)
                 
                 // Subtract stamina manually instead of adding requests
                 stamina -= BASE_STAMINA_COST_PER_FIGHT * staminaMultiplier
@@ -368,6 +367,7 @@ async function main(){
             claimExp = await checkExperienceToClaim(claimExp, character)
         }
         claimExp = await claimXpRewards(account, privateKey, claimExp)
+        await delay(10000)
     }
     printStats(totalWins, totalLosses, skillEarned, maxStamina, minStamina, FULL_STAMINA, SECONDS_PER_STAMINA)
 }
