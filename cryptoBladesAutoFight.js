@@ -257,7 +257,7 @@ async function main(){
         for(let i = 0; i < characters.length; i++){
             let character = characters[i]
             console.log("Character ", i)
-            let stamina = await characterContract.methods.getStaminaPoints(character).call()
+            let stamina = Number(await characterContract.methods.getStaminaPoints(character).call())
 
             while(stamina >= MIN_STAMINA_COST_PER_FIGHT){
                 let weaponSelected
@@ -331,7 +331,6 @@ async function main(){
     console.log("Wins: ", totalWins)
     console.log("Losses: ", totalLosses)
     console.log("Skill earned: ", skillGained.toFixed(4))
-
     let nextFullStaminaInHours = parseInt((FULL_STAMINA - maxStamina) * 5 / 60)
     console.log("Next full stamina in ", nextFullStaminaInHours, " hours.")
     let nextFullStaminaInSeconds = (FULL_STAMINA - maxStamina) * 5 * 60
